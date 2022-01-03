@@ -270,4 +270,62 @@ sns.barplot(data=df.sort_values(by='count_avg', ascending=False), x='count_avg',
 ```
 - 강우량별로 보면, 시간당 강우량 20-30mm, 2.5-5.0mm, 5.0-10.0mm 등의 순서로 평균 배달건수가 가장 많다.
 
+**날씨별 시간당 평균 배달건수**
+```python
+# 날씨별 시간당 평균 배달건수
+cursor = remote.cursor(buffered=True)
+cursor.execute(
+    "select rain_type, avg(count) \
+    from delivery \
+    group by rain_type \
+    order by avg(count) desc")
+df = pd.DataFrame(cursor.fetchall(), columns=['rain_type','count_avg'])
 
+sns.barplot(data=df.sort_values(by='count_avg', ascending=False), x='count_avg', y='rain_type', palette='Blues_r');
+```
+![5](https://user-images.githubusercontent.com/38115693/147908837-3b51dabd-b410-427a-aab1-510ad3317b80.png)
+
+- 아무 것도 내리지 않을 때보다, 비 그리고 특히 눈이 내릴 때 시간당 평균 배달건수가 더 많다.
+
+**배달유형별 총 배달건수**
+```python
+# 배달유형별 총 배달건수
+cursor = remote.cursor(buffered=True)
+cursor.execute(
+    "select dlvr_type, sum(count) \
+    from delivery \
+    group by dlvr_type \
+    order by sum(count) desc")
+df = pd.DataFrame(cursor.fetchall(), columns=['dlvr_type','count'])
+
+sns.barplot(data=df, x='count', y='dlvr_type', palette='Blues_r');
+```
+![6](https://user-images.githubusercontent.com/38115693/147908913-2f7d3db5-7f80-498b-abed-4e5ba7cc6d37.png)
+
+- 배달유형별로는 치킨, 돈까스/일식, 분식, 패스트푸드, 카페/디저트, 한식 등의 순서로 가장 많다.
+
+**요일별 총 배달건수**
+```python
+# 요일별 총 배달건수
+cursor = remote.cursor(buffered=True)
+cursor.execute(
+    "select dayweek, sum(count), avg(count)\
+    from delivery\
+    group by dayweek \
+    order by sum(count) desc")
+df = pd.DataFrame(cursor.fetchall(), columns=['dlvr_type','total_count','avg_count'])
+
+sns.barplot(data=df, x='total_count', y='dlvr_type', palette='Blues_r');
+```
+![7](https://user-images.githubusercontent.com/38115693/147908961-cedf3d62-ceed-4a3f-a604-650a7d61161a.png)
+
+- 다른 요일에 비해, 금요일과 주말(토툐일, 일요일)에 배달건수가 가장 많다.
+
+---
+
+## 결론
+
+- 날이 추운 1월, 2월, 3월에 다른 달에 비해 배달주문이 더 많으며, 특히 영하 -10도에서 영상 10도 사이에서 시간별 평균 배달건수가 가장 높다.
+- 비나 눈이 내릴 때가 아닌 시간과 비교하여 평균 배달주문건수가 더 많은데, 특히 강우량 20-30mm일 때 가장 많은 배달주문이 발생한다.
+- 치킨, 돈까스/일식에 대한 배달주문 선호도가 높고, 이어서 분식과 패스트푸드가 높다.
+- 금요일과 주말에 가장 많은 배달주문이 발생한다.
