@@ -1,6 +1,12 @@
 # 배달 데이터 분석
 ## MySQL 및 Python을 활용한 배달 데이터 전처리 및 분석
 
+<div align=center>
+    
+![image](https://user-images.githubusercontent.com/38115693/156875988-f59615e5-7885-4d50-be6f-0a424dfc8588.png)
+    
+</div>
+    
 ### 데이터 소개
 - KT 통신 빅데이터 플랫폼 (https://www.bigdata-telecom.kr/)
 - 업종 목적지별 배달 주문건수
